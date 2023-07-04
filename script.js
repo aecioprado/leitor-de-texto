@@ -1,141 +1,26 @@
 const synth = window.speechSynthesis;
 
-const inputTxt = document.querySelector(".txt");
-const voiceSelect = document.querySelector("select");
+// Texto da Notícia
+const textInput = document.getElementById("noticia")
 
-const playBtn = document.querySelector("#play")
-const pauseBtn = document.querySelector("#pause")
-const resumeBtn = document.querySelector("#resume")
+// Botões
+const playButton = document.getElementById("play-button")
+const pauseButton = document.getElementById("pause-button")
+const stopButton = document.getElementById("stop-button")
 
-const pitch = document.querySelector("#pitch");
-const pitchValue = document.querySelector(".pitch-value");
-const rate = document.querySelector("#rate");
-const rateValue = document.querySelector(".rate-value");
+ playButton.addEventListener('click', () => {
+  play(textInput.value)
+ })
 
-let selectedLanguage = null;
-let selectedRate = null;
-let selectedPitch = null;
+ function play(text){
 
-let voices = [];
+    // Recebe o texto que vai ser lido
+    const utterance = new SpeechSynthesisUtterance(text)
 
-function populateVoiceList() {
-  voices = synth.getVoices().sort(function (a, b) {
-    const aname = a.name.toUpperCase();
-    const bname = b.name.toUpperCase();
+    // Configurações
+    utterance.rate = 1
+    utterance.pitch = 1
 
-    if (aname < bname) {
-      return -1;
-    } else if (aname == bname) {
-      return 0;
-    } else {
-      return +1;
-    }
-  });
+    speechSynthesis.speak(utterance)
 
-  const selectedIndex =  voiceSelect.selectedIndex < 0 ? 0 : voiceSelect.selectedIndex;
-
-  voiceSelect.innerHTML = "";
-
-  for (let i = 0; i < voices.length; i++) {
-
-    const option = document.createElement("option");
-
-    option.textContent = `${voices[i].name} (${voices[i].lang})`;
-
-    if(!option.textContent.includes("pt-BR")) {
-        continue;
-    }
-
-    selectedLanguage = option;
-
-    console.log(selectedLanguage.innerText)
-
-    if (voices[i].default) {
-      option.textContent += " -- DEFAULT";
-    }
-
-    option.setAttribute("data-lang", voices[i].lang);
-
-    option.setAttribute("data-name", voices[i].name);
-
-    voiceSelect.appendChild(option);
-  }
-  voiceSelect.selectedIndex = selectedIndex;
-}
-
-populateVoiceList();
-
-if (speechSynthesis.onvoiceschanged !== undefined) {
-  speechSynthesis.onvoiceschanged = populateVoiceList;
-}
-
-function speak() {
-  if (synth.speaking) {
-    console.error("speechSynthesis.speaking");
-    return;
-  }
-
-  if (inputTxt.value !== "") {
-    const utterThis = new SpeechSynthesisUtterance(inputTxt.innerText);
-
-    console.log(utterThis);
-
-    utterThis.onend = function (event) {
-      console.log("SpeechSynthesisUtterance.onend");
-    };
-
-    utterThis.onerror = function (event) {
-      console.error("SpeechSynthesisUtterance.onerror");
-    };
-
-    const selectedOption =
-      voiceSelect.selectedOptions[0].getAttribute("data-name");
-
-    for (let i = 0; i < voices.length; i++) {
-      if (voices[i].name === selectedOption) {
-        utterThis.voice = voices[i];
-        break;
-      }
-    }
-    utterThis.pitch = pitch.value;
-    utterThis.rate = rate.value;
-    synth.speak(utterThis);
-  }
-}
-
-function pause() {
-  synth.pause();
-}
-
-function resume() {
-  synth.resume();
-}
-
-
-playBtn.onclick = function (event){
-  event.preventDefault()
-  speak()
-}
-
-pauseBtn.onclick = function (event){
-  event.preventDefault()
-  pause()
-}
-
-resumeBtn.onclick = function (event){
-  event.preventDefault()
-  resume()
-}
-
-
-pitch.onchange = function () {
-  pitchValue.textContent = pitch.value;
-};
-
-rate.onchange = function () {
-  rateValue.textContent = rate.value;
-};
-
-voiceSelect.onchange = function () {
-  speak();
-};
+ }

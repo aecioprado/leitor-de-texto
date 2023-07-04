@@ -12,10 +12,10 @@ body, html {
     margin: 0 auto;
   }
   
-  h1, p {
+  h3, p {
     font-family: sans-serif;
     text-align: center;
-    padding: 20px;
+    padding: 10px;
   }
   
   .txt, select, form > div {
@@ -71,4 +71,9 @@ body, html {
   
   .controls button {
     padding: 10px;
+  }
+
+  #noticia {
+    width: 90%;
+    height: 50vh;
   }
