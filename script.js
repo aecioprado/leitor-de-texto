@@ -19,7 +19,7 @@ const stopButton = document.getElementById("stop-button")
 
     // Configurações
     utterance.rate = 1
-    utterance.pitch = 1
+    //utterance.pitch = 1
 
     speechSynthesis.speak(utterance)
 
